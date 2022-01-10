@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
+import { Route, Routes } from "react-router-dom";
 import Main from './components/Main';
 import Navbar from './components/Navbar';
+import Profile from './components/Profile';
 
 interface PokeTypes {
   name: string
@@ -54,7 +56,12 @@ function App() {
     <div className="w-screen h-screen overflow-hidden">
       <Navbar />
       <div className="pt-12 w-full h-full">
-        <Main initialPokemon={initialPokemon} types={types} isLoading={isLoading} setIsLoading={(isLoading: boolean) => setIsLoading(isLoading)} filteredPokemon={filteredPokemon} setFilteredPokemon={(filteredPokemon: Pokemon[]) => setFilteredPokemon(filteredPokemon)} selectedType={selectedType} setSelectedType={(selectedType: string) => setSelectedType(selectedType)}/>
+        <Routes>
+          <Route path='/' element={
+          <Main initialPokemon={initialPokemon} types={types} isLoading={isLoading} setIsLoading={(isLoading: boolean) => setIsLoading(isLoading)} filteredPokemon={filteredPokemon} setFilteredPokemon={(filteredPokemon: Pokemon[]) => setFilteredPokemon(filteredPokemon)} selectedType={selectedType} setSelectedType={(selectedType: string) => setSelectedType(selectedType)}/>
+          } />
+          <Route path='/pokemons/' element={<Profile />} />
+        </Routes>
       </div>
     </div>
   );
