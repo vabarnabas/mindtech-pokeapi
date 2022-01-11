@@ -15,7 +15,9 @@ const Profile = () => {
     },[query])
 
     const onCatch = () => {
-        
+        const baseArray:any = localStorage.getItem('catchedPokemons') || [];
+        baseArray.push(responseData?.name);
+        localStorage.setItem('catchedPokemon', JSON.stringify(baseArray));
     }
 
     return (

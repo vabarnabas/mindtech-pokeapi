@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import ScrollContainer from 'react-indiana-drag-scroll'
-import { HiBan, HiSearch, HiExternalLink } from 'react-icons/hi'
+import { HiX, HiSearch, HiExternalLink, HiBackspace } from 'react-icons/hi'
 import Loader from './Loader';
 
 interface PokeTypes {
@@ -29,6 +29,8 @@ interface Props {
 
 const Main: React.FC<Props> = ({ initialPokemon, types, isLoading, setIsLoading, filteredPokemon, setFilteredPokemon, selectedType, setSelectedType }) => {
     
+    document.title = 'mindtech - PokéAPI'
+
     const [showSearch, setShowSearch] = useState<boolean>(false);
     const [searchString, setSearchString] = useState<string>('');
 
@@ -51,11 +53,11 @@ const Main: React.FC<Props> = ({ initialPokemon, types, isLoading, setIsLoading,
     const onBan = () => {
         setSelectedType('');
         setFilteredPokemon(initialPokemon);
+        if (!showSearch) {
+            setSearchString('');
+        }
         setShowSearch(false);
-        setSearchString('');
     }
-
-    console.log(searchString)
 
     return (
         <div className='w-full h-full flex flex-col items-center justify-center'>
@@ -66,16 +68,19 @@ const Main: React.FC<Props> = ({ initialPokemon, types, isLoading, setIsLoading,
                     ))}
                 </ScrollContainer>
                 <div className='flex items-center justify-center ml-2 space-x-2'>
-                    <HiBan onClick={() => onBan()} className='text-xl cursor-pointer hover:text-blue-500'/>
                     <div className="relative">
                         {showSearch ? <div className=" right-0 top-[175%] flex items-center justify-center w-max rounded-lg">
                             <div className="mr-1 flex items-center justify-center accent-blue-500 text-xs">
                                 <input className='mr-1' aria-label="checkbox" type="checkbox" name="check" id="check" />
                                 <label htmlFor="check">Catched Only</label>
                             </div>
-                            <input value={searchString} onChange={(e) => setSearchString(e.target.value)}  placeholder='Search Pokémon' type="text" aria-label="search" className='text-sm placeholder:text-sm px-2 bg-transparent outline-none' />
+                            <div className="relative flex items-center justify-center">
+                                <input value={searchString} onChange={(e) => setSearchString(e.target.value)}  placeholder='Search Pokémon' type="text" aria-label="search" className='text-sm placeholder:text-sm pl-2 px-5 bg-transparent outline-none' />
+                                <HiBackspace onClick={() => setSearchString('')} className='absolute right-0 cursor-pointer hover:text-blue-500' />
+                            </div>
                         </div> : <HiSearch onClick={() => setShowSearch(!showSearch)} className='text-xl cursor-pointer hover:text-blue-500'/>}
                     </div>
+                    <HiX onClick={() => onBan()} className='text-xl cursor-pointer hover:text-blue-500'/>
                 </div>
             </div>
             {/* {isLoading ?
