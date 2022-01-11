@@ -1,22 +1,11 @@
+//Packages
 import { useEffect, useState } from 'react'
 import { useNavigate, createSearchParams } from 'react-router-dom';
 import ScrollContainer from 'react-indiana-drag-scroll'
+//Interfaces
+import { PokeTypes, Pokemon } from './interfaces';
+//Design
 import { HiX, HiSearch, HiExternalLink, HiBackspace } from 'react-icons/hi'
-import Loader from './Loader';
-import Profile from './Profile'
-
-interface PokeTypes {
-    name: string
-    url: string
-}
-
-interface Pokemon {
-    pokemon: {
-        name: string
-        url: string
-    }
-    slot: number
-}
 
 interface Props {
     initialPokemon: Pokemon[]
@@ -32,16 +21,14 @@ interface Props {
     setCaptureList: (captureList: string[]) => void
 }
 
-
-const Main: React.FC<Props> = ({ initialPokemon, types, isLoading, setIsLoading, filteredPokemon, setFilteredPokemon, selectedType, setSelectedType, url, captureList, setCaptureList }) => {
-    
-    document.title = 'vabarnabas - PokéAPI'
+const Main: React.FC<Props> = ({ initialPokemon, types, setIsLoading, filteredPokemon, setFilteredPokemon, selectedType, setSelectedType, url, captureList, setCaptureList }) => {
 
     const navigate = useNavigate();
     const [showSearch, setShowSearch] = useState<boolean>(false);
     const [searchString, setSearchString] = useState<string>('');
     const [capturedOnly, setCapturedOnly] = useState<boolean>(false);
 
+    //On first load and if there is no type set filteredPokemon to initialPokemon
     useEffect(() => {
         if(filteredPokemon.length === 0) {
             setFilteredPokemon(initialPokemon)
@@ -54,6 +41,7 @@ const Main: React.FC<Props> = ({ initialPokemon, types, isLoading, setIsLoading,
         fetch(url)
         .then(res => res.json())
         .then(data => setFilteredPokemon([...data.pokemon]))
+        .catch(err => console.log(err))
         .finally(() => setIsLoading(false))
     }
 
@@ -62,14 +50,13 @@ const Main: React.FC<Props> = ({ initialPokemon, types, isLoading, setIsLoading,
         setFilteredPokemon(initialPokemon);
         if (!showSearch) {
             setSearchString('');
+            setCapturedOnly(false);
         }
         setShowSearch(false);
-        setCapturedOnly(false);
     }
 
     return (
         <div className='w-full h-full flex flex-col items-center justify-center'>
-            {url ? <Profile isLoading={isLoading} setIsLoading={(isLoading: boolean) => setIsLoading(isLoading)} url={url} captureList={captureList} setCaptureList={(captureList: string[]) => setCaptureList(captureList)} /> : ''}
             <div id='selection-div' className="w-full h-12 flex items-center justify-center border-b border-slate-200 text-slate-600 select-none px-6">
                 <ScrollContainer className="w-full grid grid-flow-col gap-x-2">
                     {types.map(type => (

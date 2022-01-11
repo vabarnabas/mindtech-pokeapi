@@ -1,22 +1,16 @@
+//Packages
 import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom'
+//Interfaces
+import { PokeTypes, Pokemon } from './components/interfaces';
+//Components
 import Main from './components/Main';
 import Navbar from './components/Navbar';
-
-interface PokeTypes {
-  name: string
-  url: string
-}
-
-interface Pokemon {
-  pokemon: {
-      name: string
-      url: string
-  }
-  slot: number
-}
+import Profile from './components/Profile';
 
 const App:React.FC = () => {
+
+  document.title = 'vabarnabas - PokéAPI'
 
   const navigate = useNavigate(); 
   const [query] = useSearchParams();
@@ -29,14 +23,26 @@ const App:React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    console.log('fetch')
     setIsLoading(true);
     fetch('https://pokeapi.co/api/v2/type')
-    .then(res => res.json())
+    .then(res => {
+      if (res.ok) {
+        return res.json();
+      } else {
+        throw new Error('type-list');
+      }
+    })
     .then(data => setTypes(data.results))
+    .catch(err => console.log(err))
 
     fetch('https://pokeapi.co/api/v2/pokemon?limit=2000')
-    .then(res => res.json())
+    .then(res => {
+      if (res.ok) {
+        return res.json();
+      } else {
+        throw new Error('initial-list');
+      }
+    })
     .then(data => {
         let bufferArray:Pokemon[] = []
         data.results.forEach((item: {name: string, url: string}) =>
@@ -50,6 +56,7 @@ const App:React.FC = () => {
         )
         setInitialPokemon([...bufferArray])
     })
+    .catch(err => console.log(err))
     .finally(() => setIsLoading(false))
   },[])
 
@@ -59,9 +66,10 @@ const App:React.FC = () => {
 
   return (
     <div className="w-screen h-screen overflow-hidden">
+      {url ? <Profile isLoading={isLoading} setIsLoading={(isLoading: boolean) => setIsLoading(isLoading)} url={url} captureList={captureList} setCaptureList={(captureList: string[]) => setCaptureList(captureList)} /> : ''}
       <Navbar />
       <div className="pt-12 w-full h-full">
-          <Main initialPokemon={initialPokemon} types={types} isLoading={isLoading} setIsLoading={(isLoading: boolean) => setIsLoading(isLoading)} filteredPokemon={filteredPokemon} setFilteredPokemon={(filteredPokemon: Pokemon[]) => setFilteredPokemon(filteredPokemon)} selectedType={selectedType} setSelectedType={(selectedType: string) => setSelectedType(selectedType)} url={url} captureList={captureList} setCaptureList={(captureList: string[]) => setCaptureList(captureList)}/>
+          <Main initialPokemon={initialPokemon} types={types} isLoading={isLoading} setIsLoading={(isLoading: boolean) => setIsLoading(isLoading)} filteredPokemon={filteredPokemon} setFilteredPokemon={(filteredPokemon: Pokemon[]) => setFilteredPokemon(filteredPokemon)} selectedType={selectedType} setSelectedType={(selectedType: string) => setSelectedType(selectedType)} url={url} captureList={captureList} setCaptureList={(captureList: string[]) => setCaptureList(captureList)} />
       </div>
     </div>
   );
