@@ -11,13 +11,21 @@ export interface Pokemon {
     slot: number
   }
 
-  export interface Abilities {
+interface Abilities {
     ability: {
         name: string
         url: string
     }
     is_hidden: boolean
     slot: number
+}
+
+interface Type {
+    slot: number
+    type: {
+        name: string
+        url: string
+    }
 }
 
 export interface PokeData {
@@ -32,6 +40,7 @@ export interface PokeData {
         front_shiny: string
     }
     abilities: Abilities[]
+    types: Type[]
 }
 
 export interface menuItem {

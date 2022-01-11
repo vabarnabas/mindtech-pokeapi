@@ -35,6 +35,13 @@ const Profile: React.FC<Props> = ({ url, isLoading, setIsLoading, captureList, s
             },
             is_hidden: false,
             slot: 0
+        }],
+        types: [{
+            slot: 0,
+            type: {
+                name: '',
+                url: '',
+            }
         }]
     });
 
@@ -82,10 +89,12 @@ const Profile: React.FC<Props> = ({ url, isLoading, setIsLoading, captureList, s
                 </Link>
                 <div className="col-span-2 flex flex-col items-center justify-center">
                     <p className="capitalize font-bold text-2xl text-blue-500">{responseData.name}</p>
+                    <p className="capitalize text-xs font-semibold text-blue-500 -mt-0.5 mb-2">{responseData.types.map(item => {return item.type.name}).join('/')}</p>
                     <p className="capitalize text-xs text-slate-600">{'Weight: ' + (responseData.weight)/10 + 'kg'}</p>
                     <p className="capitalize text-xs text-slate-600">{'Height: ' + (responseData.height)/10 + 'm'}</p>
                 </div>
-                {maxImages ? <div className="relative grid col-span-2 place-items-center">
+                {maxImages ? 
+                <div className="relative grid col-span-2 place-items-center">
                     <div className={`p-6 col-span-2 row-span-2 aspect-square ${loadedImages === maxImages ? 'hidden' : 'block'}`}>
                         <Loader/>
                     </div>
