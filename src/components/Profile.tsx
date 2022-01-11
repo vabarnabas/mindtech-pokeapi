@@ -39,6 +39,7 @@ const Profile: React.FC<Props> = ({ url, isLoading, setIsLoading, captureList, s
     });
 
     const [loadedImages, setLoadedImages] = useState(0)
+    const [maxImages, setMaxImages] = useState(4);
 
     useEffect(() => {
         if (url) {
@@ -51,7 +52,10 @@ const Profile: React.FC<Props> = ({ url, isLoading, setIsLoading, captureList, s
                   }
             })
             .then(data => setResponseData(data))
-            .finally(() => setIsLoading(false))
+            .finally(() => {
+                setIsLoading(false)
+                setMaxImages([responseData.sprites.front_default, responseData.sprites.front_shiny, responseData.sprites.back_default, responseData.sprites.back_shiny].filter(part => part !== null).length)
+            })
 
         }
     },[setIsLoading, url])
@@ -81,15 +85,17 @@ const Profile: React.FC<Props> = ({ url, isLoading, setIsLoading, captureList, s
                     <p className="capitalize text-xs text-slate-600">{'Weight: ' + (responseData.weight)/10 + 'kg'}</p>
                     <p className="capitalize text-xs text-slate-600">{'Height: ' + (responseData.height)/10 + 'm'}</p>
                 </div>
-                <div className="relative grid grid-cols-2 col-span-2 place-items-center">
-                    <div className={`p-6 col-span-2 row-span-2 aspect-square ${loadedImages === 4 ? 'hidden' : 'block'}`}>
+                {maxImages ? <div className="relative grid col-span-2 place-items-center">
+                    <div className={`p-6 col-span-2 row-span-2 aspect-square ${loadedImages === maxImages ? 'hidden' : 'block'}`}>
                         <Loader/>
                     </div>
-                    <img onLoad={() => setLoadedImages(loadedImages+1)} src={responseData.sprites.front_default} alt="" className={`aspect-square ${loadedImages !== 4 ? 'hidden' : 'block'}`} />
-                    <img onLoad={() => setLoadedImages(loadedImages+1)} src={responseData.sprites.front_shiny} alt="" className={`aspect-square ${loadedImages !== 4 ? 'hidden' : 'block'}`} />
-                    <img onLoad={() => setLoadedImages(loadedImages+1)} src={responseData.sprites.back_default} alt="" className={`aspect-square ${loadedImages !== 4 ? 'hidden' : 'block'}`} />
-                    <img onLoad={() => setLoadedImages(loadedImages+1)} src={responseData.sprites.back_shiny} alt="" className={`aspect-square ${loadedImages !== 4 ? 'hidden' : 'block'}`} />
-                </div>
+                    <div className={`grid grid-cols-2 ${loadedImages !== maxImages ? 'hidden' : 'block'}`}>
+                        <img onLoad={() => setLoadedImages(loadedImages+1)} src={responseData.sprites.front_default} alt="" className='aspect-square' />
+                        <img onLoad={() => setLoadedImages(loadedImages+1)} src={responseData.sprites.front_shiny} alt="" className='aspect-square' />
+                        <img onLoad={() => setLoadedImages(loadedImages+1)} src={responseData.sprites.back_default} alt="" className='aspect-square' />
+                        <img onLoad={() => setLoadedImages(loadedImages+1)} src={responseData.sprites.back_shiny} alt="" className='aspect-square' />
+                    </div>
+                </div> : ''}
                 <div className="w-full flex items-center justify-center space-x-4 col-span-2">
                     {responseData.abilities.filter((item: any) => item.is_hidden !== true).map((item: any) => (
                         <div key={item.ability.name} className="h-max flex items-center justify-between bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-lg px-4 py-1">

@@ -66,7 +66,6 @@ const App:React.FC = () => {
 
   return (
     <div className="w-screen h-screen overflow-hidden">
-      {url ? <Profile isLoading={isLoading} setIsLoading={(isLoading: boolean) => setIsLoading(isLoading)} url={url} captureList={captureList} setCaptureList={(captureList: string[]) => setCaptureList(captureList)} /> : ''}
       <Navbar />
       <div className="pt-12 w-full h-full">
           <Main initialPokemon={initialPokemon} types={types} isLoading={isLoading} setIsLoading={(isLoading: boolean) => setIsLoading(isLoading)} filteredPokemon={filteredPokemon} setFilteredPokemon={(filteredPokemon: Pokemon[]) => setFilteredPokemon(filteredPokemon)} selectedType={selectedType} setSelectedType={(selectedType: string) => setSelectedType(selectedType)} url={url} captureList={captureList} setCaptureList={(captureList: string[]) => setCaptureList(captureList)} />
