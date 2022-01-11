@@ -20,7 +20,7 @@ const App:React.FC = () => {
 
   const navigate = useNavigate(); 
   const [query] = useSearchParams();
-  const [url, setUrl] = useState(query.get('url'));
+  const [url, setUrl] = useState<string | null>(query.get('url'));
   const [captureList, setCaptureList] = useState<string[]>(JSON.parse(localStorage.getItem('capturedPokemon') || '[]'));
   const [types, setTypes] = useState<PokeTypes[]>([]);
   const [selectedType, setSelectedType] = useState<string>('');

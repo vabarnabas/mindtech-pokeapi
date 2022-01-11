@@ -57,13 +57,14 @@ const Main: React.FC<Props> = ({ initialPokemon, types, isLoading, setIsLoading,
         .finally(() => setIsLoading(false))
     }
 
-    const onBan = () => {
+    const onXPressed = () => {
         setSelectedType('');
         setFilteredPokemon(initialPokemon);
         if (!showSearch) {
             setSearchString('');
         }
         setShowSearch(false);
+        setCapturedOnly(false);
     }
 
     return (
@@ -88,7 +89,7 @@ const Main: React.FC<Props> = ({ initialPokemon, types, isLoading, setIsLoading,
                             </div>
                         </div> : <HiSearch onClick={() => setShowSearch(!showSearch)} className='text-xl cursor-pointer hover:text-blue-500'/>}
                     </div>
-                    <HiX onClick={() => onBan()} className='text-xl cursor-pointer hover:text-blue-500'/>
+                    <HiX onClick={() => onXPressed()} className='text-xl cursor-pointer hover:text-blue-500'/>
                 </div>
             </div>
             {/* {isLoading ?

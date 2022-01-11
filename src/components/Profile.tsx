@@ -99,7 +99,7 @@ const Profile: React.FC<Props> = ({ url, isLoading, setIsLoading, captureList, s
                     ))}
                 </div>
                 {captureList.includes(responseData.name) ? 
-                <button onClick={onRelease} className='col-span-2 text-white bg-slate-500 hover:bg-pink-500 w-full rounded-lg py-0.5'>Release</button> :
+                <button onClick={onRelease} className='col-span-2 text-white bg-slate-500 hover:bg-rose-500 w-full rounded-lg py-0.5'>Release</button> :
                 <button onClick={onCatch} className='col-span-2 text-white bg-blue-500 hover:bg-blue-600 w-full rounded-lg py-0.5'>Catch</button>
                 }
             </div>}
