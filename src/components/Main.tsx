@@ -6,6 +6,7 @@ import ScrollContainer from 'react-indiana-drag-scroll'
 import { PokeTypes, Pokemon } from './interfaces';
 //Design
 import { HiX, HiSearch, HiExternalLink, HiBackspace } from 'react-icons/hi'
+import Profile from './Profile'
 
 interface Props {
     initialPokemon: Pokemon[]
@@ -21,7 +22,7 @@ interface Props {
     setCaptureList: (captureList: string[]) => void
 }
 
-const Main: React.FC<Props> = ({ initialPokemon, types, setIsLoading, filteredPokemon, setFilteredPokemon, selectedType, setSelectedType, url, captureList, setCaptureList }) => {
+const Main: React.FC<Props> = ({ initialPokemon, types, isLoading, setIsLoading, filteredPokemon, setFilteredPokemon, selectedType, setSelectedType, url, captureList, setCaptureList }) => {
 
     const navigate = useNavigate();
     const [showSearch, setShowSearch] = useState<boolean>(false);
@@ -57,6 +58,7 @@ const Main: React.FC<Props> = ({ initialPokemon, types, setIsLoading, filteredPo
 
     return (
         <div className='w-full h-full flex flex-col items-center justify-center'>
+        {url ? <Profile isLoading={isLoading} setIsLoading={(isLoading: boolean) => setIsLoading(isLoading)} url={url} captureList={captureList} setCaptureList={(captureList: string[]) => setCaptureList(captureList)} /> : ''}    
             <div id='selection-div' className="w-full h-12 flex items-center justify-center border-b border-slate-200 text-slate-600 select-none px-6">
                 <ScrollContainer className="w-full grid grid-flow-col gap-x-2">
                     {types.map(type => (
