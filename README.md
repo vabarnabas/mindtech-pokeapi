@@ -38,22 +38,22 @@ git clone https://github.com/vabarnabas/pokeapi.git selected-directory
 
 As aforementioned this project uses [pokeAPI](https://pokeapi.co/), which means that a full documentation is already on their website, but the different endpoints used in this project will be mentioned briefly.
 
-```http
+```
 GET https://pokeapi.co/api/v2/type
 ```
 This endpoint is used to every Pokemon type's name and endpoint URL.
 
-```http
+```
 GET https://pokeapi.co/api/v2/pokemon?limit=2000
 ```
 This endpoint is used to get every Pokemon's name and endpoint URL.
 
-```http
+```
 GET https://pokeapi.co/api/v2/type/{id or name}
 ```
 This endpoint is used to get a specific type.
 
-```http
+```
 GET https://pokeapi.co/api/v2/pokemon/{id or name}
 ```
 This endpoint is used to get a specific Pokemon.
