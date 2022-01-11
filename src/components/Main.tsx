@@ -35,7 +35,7 @@ interface Props {
 
 const Main: React.FC<Props> = ({ initialPokemon, types, isLoading, setIsLoading, filteredPokemon, setFilteredPokemon, selectedType, setSelectedType, url, captureList, setCaptureList }) => {
     
-    document.title = 'mindtech - PokéAPI'
+    document.title = 'vabarnabas - PokéAPI'
 
     const navigate = useNavigate();
     const [showSearch, setShowSearch] = useState<boolean>(false);

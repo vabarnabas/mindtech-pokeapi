@@ -80,17 +80,17 @@ const Profile: React.FC<Props> = ({ url, isLoading, setIsLoading, captureList, s
         <div className='z-10 fixed top-0 left-0 w-full h-full flex items-center justify-center bg-slate-600 bg-opacity-70 px-6'>
             {isLoading ? <Loader /> : <div className={`relative gap-4 place-content-center place-items-center grid grid-cols-2 select-none bg-slate-100 border border-slate-200 rounded-lg py-4 px-10 ${captureList.includes(responseData.name) ? 'border-2 border-blue-500' : ''}`}>
                 <Link to='/'>
-                    <HiX className='absolute right-3 top-3 cursor-pointer hover:text-blue-500'/>
+                    <HiX className='absolute right-3 top-3 cursor-pointer text-slate-600 hover:text-blue-500'/>
                 </Link>
                 <div className="col-span-2 flex flex-col items-center justify-center">
                     <p className="capitalize font-bold text-2xl text-blue-500">{responseData.name}</p>
                     <p className="capitalize text-xs text-slate-600">{'Weight: ' + (responseData.weight)/10 + 'kg'}</p>
                     <p className="capitalize text-xs text-slate-600">{'Height: ' + (responseData.height)/10 + 'm'}</p>
                 </div>
-                <img src={responseData.sprites.back_default} alt="" className="aspect-square" />
-                <img src={responseData.sprites.back_shiny} alt="" className="aspect-square" />
                 <img src={responseData.sprites.front_default} alt="" className="aspect-square" />
                 <img src={responseData.sprites.front_shiny} alt="" className="aspect-square" />
+                <img src={responseData.sprites.back_default} alt="" className="aspect-square" />
+                <img src={responseData.sprites.back_shiny} alt="" className="aspect-square" />
                 <div className="flex items-center justify-center space-x-4 col-span-2">
                     {responseData.abilities.filter((item: any) => item.is_hidden !== true).map((item: any) => (
                         <div key={item.ability.name} className="h-max flex items-center justify-between bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-lg px-4 py-1">
@@ -99,8 +99,8 @@ const Profile: React.FC<Props> = ({ url, isLoading, setIsLoading, captureList, s
                     ))}
                 </div>
                 {captureList.includes(responseData.name) ? 
-                <button onClick={onRelease} className='col-span-2 text-white bg-slate-500 hover:bg-pink-500 w-full rounded-full py-0.5'>Release</button> :
-                <button onClick={onCatch} className='col-span-2 text-white bg-blue-500 hover:bg-blue-600 w-full rounded-full py-0.5'>Catch</button>
+                <button onClick={onRelease} className='col-span-2 text-white bg-slate-500 hover:bg-pink-500 w-full rounded-lg py-0.5'>Release</button> :
+                <button onClick={onCatch} className='col-span-2 text-white bg-blue-500 hover:bg-blue-600 w-full rounded-lg py-0.5'>Catch</button>
                 }
             </div>}
         </div>
