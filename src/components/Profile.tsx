@@ -1,46 +1,108 @@
-import React, { useEffect, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { HiX } from 'react-icons/hi';
+import { Link } from 'react-router-dom';
+import Loader from './Loader';
+interface Abilities {
+    ability: {
+        name: string
+        url: string
+    }
+    is_hidden: boolean
+    slot: number
+}
+interface PokeData {
+    name: string
+    weight: number
+    height: number
+    sprites: {
+        back_default: string
+        back_shiny: string
+        front_default: string
+        front_shiny: string
+    }
+    abilities: Abilities[]
+}
 
-const Profile = () => {
+interface Props {
+    url: string | null
+    isLoading: boolean
+    setIsLoading: (isLoading: boolean) => void
+    captureList: string[]
+    setCaptureList: (captureList: string[]) => void
+}
 
-    const [query, setQuery] = useSearchParams();
-    //Change Any
-    const [responseData, setResponseData] = useState<any>({})
+const Profile: React.FC<Props> = ({ url, isLoading, setIsLoading, captureList, setCaptureList }) => {
+
+    const [responseData, setResponseData] = useState<PokeData>({
+        name: '',
+        weight: 0,
+        height: 0,
+        sprites: {
+            back_default: '',
+            back_shiny: '',
+            front_default: '',
+            front_shiny: '',
+        },
+        abilities: [{
+            ability: {
+                name: '',
+                url: '',
+            },
+            is_hidden: false,
+            slot: 0
+        }]
+    });
 
     useEffect(() => {
-        const url  = query.get('url')
-        fetch(url || '')
-        .then(res => res.json())
-        .then(data => setResponseData(data))
-    },[query])
+        if (url) {
+            fetch(url)
+            .then(res => res.json())
+            .then(data => setResponseData(data))
+            .finally(() => setIsLoading(false))
+        }
+    },[setIsLoading, url])
 
     const onCatch = () => {
-        const baseArray:any = localStorage.getItem('catchedPokemons') || [];
-        baseArray.push(responseData?.name);
-        localStorage.setItem('catchedPokemon', JSON.stringify(baseArray));
+        let baseArray: string[] = JSON.parse(localStorage.getItem('capturedPokemon') || '[]');
+        baseArray.push(responseData.name);
+        localStorage.setItem('capturedPokemon', JSON.stringify(baseArray));
+        setCaptureList(baseArray);
+    }
+
+    const onRelease = () => {
+        let baseArray: string[] = JSON.parse(localStorage.getItem('capturedPokemon') || '[]');
+        baseArray.splice(baseArray.indexOf(responseData.name), 1)
+        localStorage.setItem('capturedPokemon', JSON.stringify(baseArray));
+        setCaptureList(baseArray);
     }
 
     return (
-        <div className='w-full h-full grid gap-4 grid-cols-1 sm:grid-cols-2 auto-rows-max px-6 py-4 overflow-y-scroll scrollbar-hide'>
-            <div className="gap-4 place-content-center place-items-center grid grid-cols-2 select-none bg-slate-100 border border-slate-200 rounded-lg py-4 px-4">
+        <div className='z-10 fixed top-0 left-0 w-full h-full flex items-center justify-center bg-slate-600 bg-opacity-70 px-6'>
+            {isLoading ? <Loader /> : <div className={`relative gap-4 place-content-center place-items-center grid grid-cols-2 select-none bg-slate-100 border border-slate-200 rounded-lg py-4 px-10 ${captureList.includes(responseData.name) ? 'border-2 border-blue-500' : ''}`}>
+                <Link to='/'>
+                    <HiX className='absolute right-3 top-3 cursor-pointer hover:text-blue-500'/>
+                </Link>
                 <div className="col-span-2 flex flex-col items-center justify-center">
-                    <p className="capitalize font-bold text-2xl text-blue-500">{responseData?.name}</p>
-                    <p className="capitalize text-xs text-slate-600">{'Weight: ' + (responseData?.weight)/10 + 'kg'}</p>
-                    <p className="capitalize text-xs text-slate-600">{'Height: ' + (responseData?.height)/10 + 'm'}</p>
+                    <p className="capitalize font-bold text-2xl text-blue-500">{responseData.name}</p>
+                    <p className="capitalize text-xs text-slate-600">{'Weight: ' + (responseData.weight)/10 + 'kg'}</p>
+                    <p className="capitalize text-xs text-slate-600">{'Height: ' + (responseData.height)/10 + 'm'}</p>
                 </div>
-                <img src={responseData?.sprites?.back_default} alt="" className="aspect-square" />
-                <img src={responseData?.sprites?.back_shiny} alt="" className="aspect-square" />
-                <img src={responseData?.sprites?.front_default} alt="" className="aspect-square" />
-                <img src={responseData?.sprites?.front_shiny} alt="" className="aspect-square" />
-                <button className='col-span-2 text-white bg-blue-500 hover:bg-blue-600 w-full rounded-full py-0.5'>Catch</button>
-            </div>
-            <div className="grid grid-cols-1 auto-rows-max gap-4 overflow-y-scroll scrollbar-hide select-none">
-                {responseData?.abilities?.filter((item: any) => item?.is_hidden !== true).map((item: any) => (
-                    <div key={item?.ability?.name} className="h-max flex items-center justify-between bg-slate-100 border border-slate-200 rounded-lg px-4 py-2">
-                        <p className="font-bold text-blue-500 capitalize">{item?.ability?.name}</p>
-                    </div>
-                ))}
-            </div>
+                <img src={responseData.sprites.back_default} alt="" className="aspect-square" />
+                <img src={responseData.sprites.back_shiny} alt="" className="aspect-square" />
+                <img src={responseData.sprites.front_default} alt="" className="aspect-square" />
+                <img src={responseData.sprites.front_shiny} alt="" className="aspect-square" />
+                <div className="flex items-center justify-center space-x-4 col-span-2">
+                    {responseData.abilities.filter((item: any) => item.is_hidden !== true).map((item: any) => (
+                        <div key={item.ability.name} className="h-max flex items-center justify-between bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-lg px-4 py-1">
+                            <p className="text-sm font-bold text-blue-500 capitalize">{item.ability.name}</p>
+                        </div>
+                    ))}
+                </div>
+                {captureList.includes(responseData.name) ? 
+                <button onClick={onRelease} className='col-span-2 text-white bg-slate-500 hover:bg-pink-500 w-full rounded-full py-0.5'>Release</button> :
+                <button onClick={onCatch} className='col-span-2 text-white bg-blue-500 hover:bg-blue-600 w-full rounded-full py-0.5'>Catch</button>
+                }
+            </div>}
         </div>
     )
 }

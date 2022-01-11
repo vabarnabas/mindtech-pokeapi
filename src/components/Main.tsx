@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
+import { useNavigate, createSearchParams } from 'react-router-dom';
 import ScrollContainer from 'react-indiana-drag-scroll'
 import { HiX, HiSearch, HiExternalLink, HiBackspace } from 'react-icons/hi'
 import Loader from './Loader';
+import Profile from './Profile'
 
 interface PokeTypes {
     name: string
@@ -25,21 +27,26 @@ interface Props {
     setFilteredPokemon: (filteredPokemon: Pokemon[]) => void
     selectedType: string
     setSelectedType: (selectedType: string) => void
+    url: string | null
+    captureList: string[]
+    setCaptureList: (captureList: string[]) => void
 }
 
-const Main: React.FC<Props> = ({ initialPokemon, types, isLoading, setIsLoading, filteredPokemon, setFilteredPokemon, selectedType, setSelectedType }) => {
+
+const Main: React.FC<Props> = ({ initialPokemon, types, isLoading, setIsLoading, filteredPokemon, setFilteredPokemon, selectedType, setSelectedType, url, captureList, setCaptureList }) => {
     
     document.title = 'mindtech - PokéAPI'
 
+    const navigate = useNavigate();
     const [showSearch, setShowSearch] = useState<boolean>(false);
     const [searchString, setSearchString] = useState<string>('');
+    const [capturedOnly, setCapturedOnly] = useState<boolean>(false);
 
     useEffect(() => {
         if(filteredPokemon.length === 0) {
             setFilteredPokemon(initialPokemon)
         }
     },[filteredPokemon, initialPokemon, setFilteredPokemon, selectedType])
-
 
     const onTypeChange = (url: string) => {
         setIsLoading(true);
@@ -61,6 +68,7 @@ const Main: React.FC<Props> = ({ initialPokemon, types, isLoading, setIsLoading,
 
     return (
         <div className='w-full h-full flex flex-col items-center justify-center'>
+            {url ? <Profile isLoading={isLoading} setIsLoading={(isLoading: boolean) => setIsLoading(isLoading)} url={url} captureList={captureList} setCaptureList={(captureList: string[]) => setCaptureList(captureList)} /> : ''}
             <div id='selection-div' className="w-full h-12 flex items-center justify-center border-b border-slate-200 text-slate-600 select-none px-6">
                 <ScrollContainer className="w-full grid grid-flow-col gap-x-2">
                     {types.map(type => (
@@ -71,7 +79,7 @@ const Main: React.FC<Props> = ({ initialPokemon, types, isLoading, setIsLoading,
                     <div className="relative">
                         {showSearch ? <div className=" right-0 top-[175%] flex items-center justify-center w-max rounded-lg">
                             <div className="mr-1 flex items-center justify-center accent-blue-500 text-xs">
-                                <input className='mr-1' aria-label="checkbox" type="checkbox" name="check" id="check" />
+                                <input defaultChecked={capturedOnly} onChange={() => setCapturedOnly(!capturedOnly)} className='mr-1' aria-label="checkbox" type="checkbox" name="check" id="check" />
                                 <label htmlFor="check">Catched Only</label>
                             </div>
                             <div className="relative flex items-center justify-center">
@@ -88,10 +96,12 @@ const Main: React.FC<Props> = ({ initialPokemon, types, isLoading, setIsLoading,
                     <Loader />
                 </div>: */}
             <div className="w-full h-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 auto-rows-max select-none px-6 py-4 overflow-y-scroll scrollbar-hide">
-                {filteredPokemon.filter(part => part.pokemon.name.includes(searchString.toLocaleLowerCase())).map(item => (
-                    <div key={item.pokemon.name} className="h-max flex items-center justify-between bg-slate-100 border border-slate-200 rounded-lg px-4 py-2">
+                {filteredPokemon.filter(part => capturedOnly ? captureList.includes(part.pokemon.name) : true).filter(part => part.pokemon.name.includes(searchString.toLocaleLowerCase())).map(item => (
+                    <div key={item.pokemon.name} className={`h-max flex items-center justify-between bg-slate-100 border border-slate-200 rounded-lg px-4 py-2 ${captureList.includes(item.pokemon.name) ? 'border border-blue-500' : ''}`}>
                         <p className="font-bold text-blue-500 capitalize">{item.pokemon.name}</p>
-                        <HiExternalLink onClick={() => {window.open(item.pokemon.url, '_blank')}} className='text-lg cursor-pointer text-slate-600 hover:text-blue-500'/>
+                        <HiExternalLink onClick={() => {navigate({
+                            search: `?${createSearchParams({url: item.pokemon.url})}`
+                        });setIsLoading(true)}} className='text-lg cursor-pointer text-slate-600 hover:text-blue-500'/>
                     </div>
                 ))}
             </div>

@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Route, Routes } from "react-router-dom";
+import { useSearchParams, useNavigate } from 'react-router-dom'
 import Main from './components/Main';
 import Navbar from './components/Navbar';
-import Profile from './components/Profile';
 
 interface PokeTypes {
   name: string
@@ -17,10 +16,12 @@ interface Pokemon {
   slot: number
 }
 
-function App() {
+const App:React.FC = () => {
 
-  document.title = 'mindtech - PokéAPI'
-
+  const navigate = useNavigate(); 
+  const [query] = useSearchParams();
+  const [url, setUrl] = useState(query.get('url'));
+  const [captureList, setCaptureList] = useState<string[]>(JSON.parse(localStorage.getItem('capturedPokemon') || '[]'));
   const [types, setTypes] = useState<PokeTypes[]>([]);
   const [selectedType, setSelectedType] = useState<string>('');
   const [filteredPokemon, setFilteredPokemon] = useState<Pokemon[]>([]);
@@ -52,16 +53,15 @@ function App() {
     .finally(() => setIsLoading(false))
   },[])
 
+  useEffect(() => {
+    setUrl(query.get('url'))
+  },[navigate, query])
+
   return (
     <div className="w-screen h-screen overflow-hidden">
       <Navbar />
       <div className="pt-12 w-full h-full">
-        <Routes>
-          <Route path='/' element={
-          <Main initialPokemon={initialPokemon} types={types} isLoading={isLoading} setIsLoading={(isLoading: boolean) => setIsLoading(isLoading)} filteredPokemon={filteredPokemon} setFilteredPokemon={(filteredPokemon: Pokemon[]) => setFilteredPokemon(filteredPokemon)} selectedType={selectedType} setSelectedType={(selectedType: string) => setSelectedType(selectedType)}/>
-          } />
-          <Route path='/pokemons/' element={<Profile />} />
-        </Routes>
+          <Main initialPokemon={initialPokemon} types={types} isLoading={isLoading} setIsLoading={(isLoading: boolean) => setIsLoading(isLoading)} filteredPokemon={filteredPokemon} setFilteredPokemon={(filteredPokemon: Pokemon[]) => setFilteredPokemon(filteredPokemon)} selectedType={selectedType} setSelectedType={(selectedType: string) => setSelectedType(selectedType)} url={url} captureList={captureList} setCaptureList={(captureList: string[]) => setCaptureList(captureList)}/>
       </div>
     </div>
   );
