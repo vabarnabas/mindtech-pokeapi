@@ -26,7 +26,7 @@ To clone write the followind in a terminal:
 git clone https://github.com/vabarnabas/pokeapi.git
 ```
 
-After cloning just use `npm start` in a terminal, and the page will load on *localhost:3000*.
+After cloning use `npm install` or `yarn add` to install the packages then just run `npm start` or `yarn start` in a terminal, and the page will load on *localhost:3000*.
 
 *sidenote: if you want to clone to a specific directory use this code instead:*
 
