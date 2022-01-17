@@ -2,11 +2,10 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom'
 //Interfaces
-import { PokeTypes, Pokemon } from './components/interfaces';
+import { PokeTypes, Pokemon } from './interfaces/interfaces';
 //Components
-import Main from './components/Main';
-import Navbar from './components/Navbar';
-import Profile from './components/Profile';
+import Main from './components/Main/Main';
+import Navbar from './components/Layout/Navbar';
 
 const App:React.FC = () => {
 

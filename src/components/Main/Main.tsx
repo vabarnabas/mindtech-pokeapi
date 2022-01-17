@@ -3,10 +3,10 @@ import { useEffect, useState } from 'react'
 import { useNavigate, createSearchParams } from 'react-router-dom';
 import ScrollContainer from 'react-indiana-drag-scroll'
 //Interfaces
-import { PokeTypes, Pokemon } from './interfaces';
+import { PokeTypes, Pokemon } from '../../interfaces/interfaces'
 //Design
 import { HiX, HiSearch, HiExternalLink, HiBackspace } from 'react-icons/hi'
-import Profile from './Profile'
+import Profile from '../Profile/Profile'
 
 interface Props {
     initialPokemon: Pokemon[]

@@ -2,10 +2,10 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 //Interfaces
-import { PokeData } from './interfaces'
+import { PokeData } from '../../interfaces/interfaces'
 import { HiX } from 'react-icons/hi';
 //Packages
-import Loader from './Loader';
+import Loader from '../Misc/Loader';
 
 interface Props {
     url: string | null

@@ -1,5 +1,5 @@
 //Packages
-import { menuItem } from "./interfaces"
+import { menuItem } from '../../interfaces/interfaces'
 
 const Navbar = () => {
 
